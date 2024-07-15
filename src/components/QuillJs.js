@@ -54,7 +54,6 @@ const QuillJs = () => {
                     var reader = new FileReader();
                     reader.readAsDataURL(file);
                     reader.onload = function () {
-                      console.log(reader.result);
                       resolve(reader.result);
                     };
                     reader.onerror = function (error) {
@@ -150,14 +149,7 @@ const QuillJs = () => {
   return (
     <>
       <div className={styles.editor}>
-        <ReactQuill
-          ref={editorRef}
-          theme="snow"
-          value={value}
-          onChange={setValue}
-          modules={modules}
-          formats={formats}
-        />
+        <ReactQuill ref={editorRef} theme="snow" value={value} onChange={setValue} modules={modules} formats={formats} />
       </div>
       <pre style={{ textWrap: "wrap" }}>{window.editor?.unprivilegedEditor?.getHTML()}</pre>
       <pre style={{ textWrap: "wrap" }}>{JSON.stringify(window.editor?.editor.editor.delta, null, 4)}</pre>

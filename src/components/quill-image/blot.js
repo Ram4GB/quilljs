@@ -14,8 +14,6 @@ class ImageBlot extends Embed {
     node.setAttribute("width", value.width);
     node.setAttribute("height", value.height);
 
-    console.log("this.centerStyle", this.centerStyle);
-
     if (value.align === "center") {
       node.setAttribute("style", this.centerStyle);
     } else if (value.align === "right") {
@@ -82,6 +80,7 @@ class ImageBlot extends Embed {
   }
 
   // Its will return new delta value everytime user changes text
+  // The returned value should have included all the valid properties to pass to create method
   static value(node) {
     const isAlignCenter = node.style.margin === "0px auto" && node.style.display === "block";
 
