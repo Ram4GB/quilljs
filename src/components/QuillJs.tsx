@@ -20,7 +20,7 @@ Quill.register(ImageBlot);
 const MentionBlot = Quill.import("blots/mention");
 
 class StyledMentionBlot extends MentionBlot {
-  static render(data) {
+  static render(data: any) {
     const element = document.createElement("span");
     element.innerText = data.value;
     element.style.color = data.color ?? "blue";
@@ -49,7 +49,7 @@ const QuillJs = () => {
               if (input !== null && input.files !== null) {
                 const file = input.files[0];
 
-                const getBase64 = (file) => {
+                const getBase64 = (file: File): Promise<string | ArrayBuffer | null> => {
                   return new Promise((resolve) => {
                     var reader = new FileReader();
                     reader.readAsDataURL(file);
@@ -65,7 +65,7 @@ const QuillJs = () => {
                 const base64 = await getBase64(file);
 
                 const formData = new FormData();
-                formData.append("base64", base64);
+                formData.append("base64", base64?.toString() ?? "");
 
                 let url = "";
 
@@ -78,7 +78,7 @@ const QuillJs = () => {
 
                 if (!url) throw new Error("Error uploading image");
 
-                const quill = editorRef.current.editor;
+                const quill = editorRef.current?.editor;
 
                 if (quill) {
                   const range = quill.getSelection();
@@ -93,7 +93,7 @@ const QuillJs = () => {
         allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
         mentionDenotationChars: ["@", "#"],
         spaceAfterInsert: false,
-        source: async function (searchTerm, renderList, mentionChar) {
+        source: async function (searchTerm: string, renderList: any, mentionChar: string) {
           let values;
           if (mentionChar === "@") {
             values = atValues;
@@ -117,17 +117,19 @@ const QuillJs = () => {
     []
   );
 
-  const editorRef = useRef(null);
+  const editorRef = useRef<any>(null);
 
   useEffect(() => {
     window.editor = editorRef.current;
-    editorRef.current.editor.setContents(defaultDeltaValues);
+    editorRef.current?.editor.setContents(defaultDeltaValues);
 
-    const handler = (event) => {
+    const handler = (event: any) => {
       const quill = editorRef.current.editor;
       if (quill) {
         const { value: blot } = event;
         const command = prompt("Enter command: 1. align, 2.update");
+
+        if (!command) return;
 
         if (command === "2") {
           const value = prompt("Enter width/height");

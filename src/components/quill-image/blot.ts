@@ -2,11 +2,24 @@ import { Quill } from "react-quill";
 
 const Embed = Quill.import("blots/embed");
 
+interface Value {
+  alt: string;
+  url: string;
+  width: string;
+  height: string;
+  align: string;
+}
+
+class ImageEvent extends Event {
+  event: any;
+  value: any;
+}
+
 class ImageBlot extends Embed {
   mounted = false;
   static centerStyle = "margin: 0 auto;display:block";
 
-  static create(value) {
+  static create(value: Value) {
     const node = super.create();
 
     node.setAttribute("src", value.url);
@@ -25,13 +38,13 @@ class ImageBlot extends Embed {
     return node;
   }
 
-  constructor(domNode, value) {
+  constructor(domNode: any, value: Value) {
     super(domNode, value);
     this.domNode = domNode;
   }
 
-  handleClick(e) {
-    const event = new Event("styled-image-event", {
+  handleClick(e: any) {
+    const event = new ImageEvent("styled-image-event", {
       bubbles: true,
       cancelable: true,
     });
@@ -43,7 +56,7 @@ class ImageBlot extends Embed {
     e.preventDefault();
   }
 
-  alignImage(align) {
+  alignImage(align: string) {
     if (align === "center") {
       this.domNode.setAttribute("style", this.centerStyle);
     } else if (align === "right") {
@@ -53,12 +66,12 @@ class ImageBlot extends Embed {
     }
   }
 
-  updateDimensions(width, height) {
+  updateDimensions(width: string, height: string) {
     this.domNode.setAttribute("width", width);
     this.domNode.setAttribute("height", height);
   }
 
-  format(format, value) {
+  format(format: string, value: string) {
     if (format === "align") {
       this.alignImage(value);
     } else {
@@ -81,7 +94,7 @@ class ImageBlot extends Embed {
 
   // Its will return new delta value everytime user changes text
   // The returned value should have included all the valid properties to pass to create method
-  static value(node) {
+  static value(node: HTMLDivElement) {
     const isAlignCenter = node.style.margin === "0px auto" && node.style.display === "block";
 
     return {

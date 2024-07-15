@@ -17,3 +17,7 @@ https://github.com/quill-mention/quill-mention/issues/9
 ## Blot
 
 https://github.com/slab/parchment
+
+## How can we update DOM and update delta value?
+
+[link](https://github.com/slab/quill/issues/1241#issuecomment-271389347)
