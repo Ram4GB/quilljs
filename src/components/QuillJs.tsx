@@ -1,17 +1,20 @@
+"use client";
 import "quill-mention/dist/quill.mention.css";
 import "react-quill/dist/quill.snow.css";
 import { atValues, hashValues } from "./mock";
-import { defaultDeltaValues } from "./const";
+import { Button } from "./ui/button";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { formats, toolbar } from "./defaultConfig";
-import { handleUploadFile } from "@/app/actions";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { handleUploadFile, handleSave } from "@/app/actions";
+import { toast } from "sonner";
+import { Toaster } from "./ui/sonner";
 import dynamic from "next/dynamic";
 import ImageBlot from "./quill-image/blot";
 import Mention from "quill-mention";
+import OptionDialog from "./quill-image/Dialog";
 import QuillImage from "./quill-image/module";
 import ReactQuill, { Quill } from "react-quill";
 import styles from "./QuillJs.module.css";
-import OptionDialog from "./quill-image/Dialog";
 
 Quill.register({ "modules/mention": Mention });
 Quill.register("modules/quill-image", QuillImage);
@@ -34,7 +37,11 @@ StyledMentionBlot.blotName = "styled-mention";
 
 Quill.register(StyledMentionBlot);
 
-const QuillJs = () => {
+interface QuillJsProps {
+  defaultDeltaValues: any;
+}
+
+const QuillJs: FC<QuillJsProps> = ({ defaultDeltaValues }) => {
   const editorRef = useRef<any>(null);
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const [value, setValue] = useState("");
@@ -146,7 +153,7 @@ const QuillJs = () => {
     return () => {
       window.removeEventListener("styled-image-event", handler);
     };
-  }, []);
+  }, [defaultDeltaValues]);
 
   return (
     <>
@@ -166,6 +173,29 @@ const QuillJs = () => {
         setSelectedImage={setSelectedImage}
         onSubmit={handleSubmitOption}
       />
+      <Toaster
+        position="top-center"
+        richColors
+        duration={2000}
+        style={{ fontSize: "1rem" }}
+        toastOptions={{ style: {} }}
+      />
+      <div className="flex justify-center">
+        <Button
+          className="w-full max-w-[500px] mx-auto rounded-none"
+          onClick={() => {
+            handleSave(JSON.stringify(editorRef.current.editor.editor.delta)).then((res) => {
+              if (res.success) {
+                toast.success("Saved successfully");
+              } else {
+                toast.error("Saved failed");
+              }
+            });
+          }}
+        >
+          Save
+        </Button>
+      </div>
     </>
   );
 };

@@ -28,13 +28,16 @@ class ImageBlot extends Embed {
     node.setAttribute("width", value.width);
     node.setAttribute("height", value.height);
 
-    if (value.align === "center") {
-      console.log("centerStyle", centerStyle);
-      node.setAttribute("style", centerStyle);
-    } else if (value.align === "right") {
-      node.setAttribute("style", "float: right;");
-    } else if (value.align === "left") {
-      node.setAttribute("style", "float: left;");
+    switch (value.align) {
+      case "center":
+        node.setAttribute("style", centerStyle);
+        break;
+      case "right":
+        node.setAttribute("style", "float: right;");
+        break;
+      case "left":
+        node.setAttribute("style", "float: left;");
+        break;
     }
 
     return node;
@@ -50,7 +53,7 @@ class ImageBlot extends Embed {
       bubbles: true,
       cancelable: true,
     });
-    event.value = Object.assign({}, this.domNode.dataset);
+    event.value = { ...this.domNode.dataset };
     const parchment = Quill.find(this.domNode);
     event.event = e;
     event.value = parchment;
@@ -60,7 +63,6 @@ class ImageBlot extends Embed {
 
   alignImage(align: string) {
     if (align === "center") {
-      console.log("first", this, centerStyle);
       this.domNode.setAttribute("style", centerStyle);
     } else if (align === "right") {
       this.domNode.setAttribute("style", `float: right;`);
@@ -75,7 +77,6 @@ class ImageBlot extends Embed {
   }
 
   format(format: string, value: string) {
-    console.log(this);
     if (format === "align") {
       this.alignImage(value);
     } else {
@@ -93,11 +94,9 @@ class ImageBlot extends Embed {
   detach() {
     super.detach();
     this.mounted = false;
-    this.domNode.removeEventListener("click", this.handleClick);
+    this.domNode.removeEventListener("click", this.handleClick.bind(this));
   }
 
-  // Its will return new delta value everytime user changes text
-  // The returned value should have included all the valid properties to pass to create method
   static value(node: HTMLDivElement) {
     const isAlignCenter = node.style.margin === "0px auto" && node.style.display === "block";
 

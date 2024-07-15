@@ -50,9 +50,9 @@ const OptionForm: FC<OptionFormProps> = (props) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="left">left</SelectItem>
-                  <SelectItem value="center">center</SelectItem>
-                  <SelectItem value="right">right</SelectItem>
+                  <SelectItem value="left">Left</SelectItem>
+                  <SelectItem value="center">Center</SelectItem>
+                  <SelectItem value="right">Right</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
