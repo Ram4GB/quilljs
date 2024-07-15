@@ -1,0 +1,13 @@
+.editor {
+  display: block;
+  width: 500px;
+  margin: auto;
+}
+
+.editor .ql-editor {
+  height: 300px;
+}
+
+.editor :global .ql-mention-denotation-char {
+  display: none !important;
+}
