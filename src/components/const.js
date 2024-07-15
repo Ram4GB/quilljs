@@ -2,10 +2,18 @@ export const defaultDeltaValues = {
   ops: [
     {
       insert: {
-        image: "https://res.cloudinary.com/dluupfg6f/image/upload/v1720760205/mxvfwsgko13cmth1szey.png",
+        "styled-image": {
+          alt: "logo",
+          url: "https://res.cloudinary.com/dluupfg6f/image/upload/v1720760205/mxvfwsgko13cmth1szey.png",
+          width: "300",
+          height: "300",
+          align: "center",
+        },
       },
     },
-    { insert: "\n\nDear " },
+    {
+      insert: "\n\nDear ",
+    },
     {
       insert: {
         "styled-mention": {
@@ -57,6 +65,8 @@ export const defaultDeltaValues = {
         },
       },
     },
-    { insert: "\n" },
+    {
+      insert: "\n",
+    },
   ],
 };

@@ -6,6 +6,7 @@ import { formats, toolbar } from "./defaultConfig";
 import { handleUploadFile } from "@/app/actions";
 import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import ImageBlot from "./quill-image/blot";
 import Mention from "quill-mention";
 import QuillImage from "./quill-image/module";
 import ReactQuill, { Quill } from "react-quill";
@@ -14,7 +15,7 @@ import styles from "./QuillJs.module.css";
 Quill.register({ "modules/mention": Mention });
 Quill.register("modules/quill-image", QuillImage);
 
-// Quill.register(ImageBlot);
+Quill.register(ImageBlot);
 
 const MentionBlot = Quill.import("blots/mention");
 
@@ -82,7 +83,7 @@ const QuillJs = () => {
 
                 if (quill) {
                   const range = quill.getSelection();
-                  range && quill.insertEmbed(range.index, "image", url);
+                  range && quill.insertEmbed(range.index, "styled-image", { url, alt: "logo" });
                 }
               }
             };
@@ -112,6 +113,7 @@ const QuillJs = () => {
         },
         blotName: "styled-mention",
       },
+      "quill-image": {},
     }),
     []
   );
@@ -121,6 +123,28 @@ const QuillJs = () => {
   useEffect(() => {
     window.editor = editorRef.current;
     editorRef.current.editor.setContents(defaultDeltaValues);
+
+    const handler = (event) => {
+      const quill = editorRef.current.editor;
+      if (quill) {
+        const { value: blot } = event;
+        const command = prompt("Enter command: 1. align, 2.update");
+
+        if (command === "2") {
+          const value = prompt("Enter width/height");
+          blot.format("dimension", value);
+        } else {
+          const value = prompt("Enter align: center, right, left");
+          blot.format("align", value);
+        }
+      }
+    };
+
+    window.addEventListener("styled-image-event", handler);
+
+    return () => {
+      window.removeEventListener("styled-image-event", handler);
+    };
   }, []);
 
   return (
@@ -135,8 +159,16 @@ const QuillJs = () => {
           formats={formats}
         />
       </div>
-      <textarea value={window.editor?.unprivilegedEditor?.getHTML()} />
-      <textarea value={JSON.stringify(window.editor?.editor.editor.delta)} />
+      <pre style={{ textWrap: "wrap" }}>{window.editor?.unprivilegedEditor?.getHTML()}</pre>
+      <pre style={{ textWrap: "wrap" }}>{JSON.stringify(window.editor?.editor.editor.delta, null, 4)}</pre>
+      <p>Preview</p>
+
+      <div
+        dangerouslySetInnerHTML={{
+          __html: window.editor?.unprivilegedEditor?.getHTML(),
+        }}
+        className={styles.editor}
+      />
     </>
   );
 };
