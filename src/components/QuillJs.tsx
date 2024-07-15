@@ -11,6 +11,7 @@ import Mention from "quill-mention";
 import QuillImage from "./quill-image/module";
 import ReactQuill, { Quill } from "react-quill";
 import styles from "./QuillJs.module.css";
+import OptionDialog from "./quill-image/Dialog";
 
 Quill.register({ "modules/mention": Mention });
 Quill.register("modules/quill-image", QuillImage);
@@ -34,6 +35,8 @@ StyledMentionBlot.blotName = "styled-mention";
 Quill.register(StyledMentionBlot);
 
 const QuillJs = () => {
+  const editorRef = useRef<any>(null);
+  const [selectedImage, setSelectedImage] = useState<any>(null);
   const [value, setValue] = useState("");
   const modules = useMemo(
     () => ({
@@ -117,7 +120,14 @@ const QuillJs = () => {
     []
   );
 
-  const editorRef = useRef<any>(null);
+  const handleSubmitOption = (data: any) => {
+    if (!selectedImage) return;
+
+    selectedImage.format("align", data.align);
+    selectedImage.format("dimension", data.dimension);
+
+    setSelectedImage(undefined);
+  };
 
   useEffect(() => {
     window.editor = editorRef.current;
@@ -127,17 +137,7 @@ const QuillJs = () => {
       const quill = editorRef.current.editor;
       if (quill) {
         const { value: blot } = event;
-        const command = prompt("Enter command: 1. align, 2.update");
-
-        if (!command) return;
-
-        if (command === "2") {
-          const value = prompt("Enter width/height");
-          blot.format("dimension", value);
-        } else {
-          const value = prompt("Enter align: center, right, left");
-          blot.format("align", value);
-        }
+        setSelectedImage(blot);
       }
     };
 
@@ -151,17 +151,20 @@ const QuillJs = () => {
   return (
     <>
       <div className={styles.editor}>
-        <ReactQuill ref={editorRef} theme="snow" value={value} onChange={setValue} modules={modules} formats={formats} />
+        <ReactQuill
+          ref={editorRef}
+          theme="snow"
+          value={value}
+          onChange={setValue}
+          modules={modules}
+          formats={formats}
+        />
       </div>
-      <pre style={{ textWrap: "wrap" }}>{window.editor?.unprivilegedEditor?.getHTML()}</pre>
-      <pre style={{ textWrap: "wrap" }}>{JSON.stringify(window.editor?.editor.editor.delta, null, 4)}</pre>
-      <p>Preview</p>
-
-      <div
-        dangerouslySetInnerHTML={{
-          __html: window.editor?.unprivilegedEditor?.getHTML(),
-        }}
-        className={styles.editor}
+      <OptionDialog
+        open={Boolean(selectedImage)}
+        selectedImage={selectedImage}
+        setSelectedImage={setSelectedImage}
+        onSubmit={handleSubmitOption}
       />
     </>
   );

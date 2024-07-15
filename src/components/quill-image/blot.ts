@@ -15,9 +15,10 @@ class ImageEvent extends Event {
   value: any;
 }
 
+const centerStyle = "margin: 0 auto;display:block";
+
 class ImageBlot extends Embed {
-  mounted = false;
-  static centerStyle = "margin: 0 auto;display:block";
+  private mounted = false;
 
   static create(value: Value) {
     const node = super.create();
@@ -28,7 +29,8 @@ class ImageBlot extends Embed {
     node.setAttribute("height", value.height);
 
     if (value.align === "center") {
-      node.setAttribute("style", this.centerStyle);
+      console.log("centerStyle", centerStyle);
+      node.setAttribute("style", centerStyle);
     } else if (value.align === "right") {
       node.setAttribute("style", "float: right;");
     } else if (value.align === "left") {
@@ -58,7 +60,8 @@ class ImageBlot extends Embed {
 
   alignImage(align: string) {
     if (align === "center") {
-      this.domNode.setAttribute("style", this.centerStyle);
+      console.log("first", this, centerStyle);
+      this.domNode.setAttribute("style", centerStyle);
     } else if (align === "right") {
       this.domNode.setAttribute("style", `float: right;`);
     } else if (align === "left") {
@@ -72,6 +75,7 @@ class ImageBlot extends Embed {
   }
 
   format(format: string, value: string) {
+    console.log(this);
     if (format === "align") {
       this.alignImage(value);
     } else {
