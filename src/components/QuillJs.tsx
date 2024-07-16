@@ -139,7 +139,9 @@ const QuillJs: FC<QuillJsProps> = ({ defaultDeltaValues }) => {
 
   useEffect(() => {
     window.editor = editorRef.current;
-    editorRef.current?.editor.setContents(JSON.parse(localStorage.getItem("quill-data") ?? "") ?? defaultDeltaValues);
+    editorRef.current?.editor.setContents(
+      JSON.parse(localStorage.getItem("quill-data") as string) ?? defaultDeltaValues
+    );
 
     const handler = (event: any) => {
       const quill = editorRef.current.editor;
