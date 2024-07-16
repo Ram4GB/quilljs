@@ -11,6 +11,7 @@ export const formats = [
   "indent",
   "link",
   "image",
+  "styled-mention",
   "color",
   "background",
   "font",
