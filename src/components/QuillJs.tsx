@@ -1,4 +1,5 @@
 "use client";
+const ReactQuill = typeof window === "object" ? require("react-quill") : () => false;
 import "quill-mention/dist/quill.mention.css";
 import "react-quill/dist/quill.snow.css";
 import { atValues, hashValues } from "./mock";
@@ -6,6 +7,7 @@ import { Button } from "./ui/button";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { formats, toolbar } from "./defaultConfig";
 import { handleUploadFile, handleSave } from "@/app/actions";
+import { Quill } from "react-quill";
 import { toast } from "sonner";
 import { Toaster } from "./ui/sonner";
 import dynamic from "next/dynamic";
@@ -13,7 +15,6 @@ import ImageBlot from "./quill-image/blot";
 import Mention from "quill-mention";
 import OptionDialog from "./quill-image/Dialog";
 import QuillImage from "./quill-image/module";
-import ReactQuill, { Quill } from "react-quill";
 import styles from "./QuillJs.module.css";
 
 Quill.register({ "modules/mention": Mention });

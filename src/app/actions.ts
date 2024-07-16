@@ -25,7 +25,6 @@ export const handleUploadFile = async (formData: any) => {
 
 export const handleSave = async (delta: string) => {
   try {
-    console.log('process.env.API_ENDPOINT.concat("/1")', process.env.API_ENDPOINT.concat("/1"), delta);
     const data = await fetch(process.env.API_ENDPOINT.concat("/1"), {
       method: "PATCH",
       body: JSON.stringify({
@@ -35,8 +34,6 @@ export const handleSave = async (delta: string) => {
         "Content-Type": "application/json",
       },
     });
-
-    console.log("data", data);
 
     return {
       success: true,

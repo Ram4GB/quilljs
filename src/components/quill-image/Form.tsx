@@ -65,7 +65,7 @@ const OptionForm: FC<OptionFormProps> = (props) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Dimension</FormLabel>
-              <Input {...field} />
+              <Input type="number" {...field} />
               <FormMessage />
             </FormItem>
           )}
