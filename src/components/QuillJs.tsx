@@ -139,7 +139,7 @@ const QuillJs: FC<QuillJsProps> = ({ defaultDeltaValues }) => {
 
   useEffect(() => {
     window.editor = editorRef.current;
-    editorRef.current?.editor.setContents(defaultDeltaValues);
+    editorRef.current?.editor.setContents(JSON.parse(localStorage.getItem("quill-data") ?? "") ?? defaultDeltaValues);
 
     const handler = (event: any) => {
       const quill = editorRef.current.editor;
@@ -185,13 +185,8 @@ const QuillJs: FC<QuillJsProps> = ({ defaultDeltaValues }) => {
         <Button
           className="w-full max-w-[500px] mx-auto rounded-none"
           onClick={() => {
-            handleSave(JSON.stringify(editorRef.current.editor.editor.delta)).then((res) => {
-              if (res.success) {
-                toast.success("Saved successfully");
-              } else {
-                toast.error("Saved failed");
-              }
-            });
+            localStorage.setItem("quill-data", JSON.stringify(editorRef.current.editor.editor.delta));
+            toast.success("Save success!");
           }}
         >
           Save
